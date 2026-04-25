@@ -111,21 +111,21 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
+import { setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+await setPersistence(auth, browserLocalPersistence);
 const provider = new GoogleAuthProvider();
 let currentUser = null;
+
 getRedirectResult(auth)
   .then((result) => {
     if (result?.user) {
-      currentUser = result.user;
-
-      document.getElementById("userInfo").innerText =
-        "Logged in as: " + result.user.displayName;
+      console.log("Redirect login success:", result.user);
     }
   })
   .catch((error) => {
-    console.error(error);
+    console.error("Redirect error:", error);
   });
-
 window.login = async function () {
   try {
     await signInWithRedirect(auth, provider);
@@ -133,23 +133,22 @@ window.login = async function () {
     console.error(error);
   }
 };
-
 window.logout = async function () {
   await signOut(auth);
 };
-
 onAuthStateChanged(auth, (user) => {
   const userInfo = document.getElementById("userInfo");
 
   if (user) {
     currentUser = user;
     userInfo.innerText = "Logged in as: " + user.displayName;
+    console.log("User detected:", user);
   } else {
     currentUser = null;
     userInfo.innerText = "Not logged in";
+    console.log("No user");
   }
 });
-
 async function addPost() {
   try {
     const input = document.getElementById("postInput");
