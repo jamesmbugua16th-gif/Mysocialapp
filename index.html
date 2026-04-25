@@ -97,7 +97,9 @@ import {
   getRedirectResult,
   signOut,
   onAuthStateChanged,
-  GoogleAuthProvider
+  GoogleAuthProvider,
+  setPersistence,
+  browserLocalPersistence
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 const firebaseConfig = {
   apiKey: "AIzaSyDOyT7rKTgOwNf-aJ-1BHOris2R_tD6iyc",
@@ -111,12 +113,8 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
-import { setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-
-await setPersistence(auth, browserLocalPersistence);
 const provider = new GoogleAuthProvider();
 let currentUser = null;
-
 getRedirectResult(auth)
   .then((result) => {
     if (result?.user) {
